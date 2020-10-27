@@ -1,0 +1,37 @@
+micronaut:
+  application:
+    name: jwt-generator-b
+  server:
+    port: 8082
+  security:
+    enabled: true
+    authentication: bearer
+    token:
+      jwt:
+        bearer:
+          enabled: true
+
+endpoints:
+  health:
+    rabbitmq:
+      enabled: false
+
+b1x:
+  java-utils:
+    security:
+      fake-jwks-signature:
+        enabled: false
+  security:
+    enabled: true
+    token:
+      jwt:
+        jwt-generator-b:
+          enabled: true
+          tokenIssuer: jwt-generator-b
+          tokenTtl: 240h
+          signature:
+            privateKey: "PVT_R1_h25WQArGBVag6HT5LJQCKf3FKKC5YMkjrqcw4Swu1GHBtaieQ"
+            publicKey: "PUB_R1_6Vja57JPRAwNgxXj9UscyN95TN2jPtASdrB2gzZ285Nd2BqyU6"
+            jwk:
+              enabled: true
+              key-id: jwt-generator-b

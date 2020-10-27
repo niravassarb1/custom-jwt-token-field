@@ -1,0 +1,17 @@
+micronaut:
+  application:
+    name: service-x
+  server:
+    port: 8083
+  security:
+    enabled: true
+    token:
+      jwt:
+        signatures:
+          jwks:
+            jwt-generator-a:
+              keyType: 'EC'
+              url: 'http://localhost:8081/.well-known/jwks.json'
+            jwt-generator-b:
+              keyType: 'EC'
+              url: 'http://localhost:8082/.well-known/jwks.json'

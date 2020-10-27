@@ -1,0 +1,63 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+    id "io.micronaut.application" version '1.0.5'
+}
+
+version "0.1"
+group "example.micronaut"
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+
+    maven {
+        url 'https://blockone.jfrog.io/artifactory/android-libs'
+        credentials{
+            username System.getenv("ARTIFACTORY_USERNAME") ?: ARTIFACTORY_USERNAME
+            password System.getenv("ARTIFACTORY_PASSWORD") ?: ARTIFACTORY_PASSWORD
+        }
+    }
+
+    maven {
+        name = 'B1X'
+        url = uri('https://maven.pkg.github.com/b1-as/b1x-java-utils')
+        credentials {
+            username System.getenv("MAVEN_USERNAME") ?: MAVEN_USERNAME
+            password System.getenv("MAVEN_PASSWORD") ?: MAVEN_PASSWORD
+        }
+    }
+}
+
+micronaut {
+    runtime "netty"
+    testRuntime "junit5"
+    processing {
+        incremental true
+        annotations "example.micronaut.*"
+    }
+}
+
+dependencies {
+    def b1xUtilsVersion = '2.2.27'
+
+
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("javax.annotation:javax.annotation-api")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.security:micronaut-security")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    // Block One Exchange
+    implementation "one.block.b1x:eosio-utils:${b1xUtilsVersion}"
+    implementation "one.block.b1x:security-utils:${b1xUtilsVersion}"
+}
+
+mainClassName = "example.micronaut.Application"
+java {
+    sourceCompatibility = JavaVersion.toVersion('11')
+    targetCompatibility = JavaVersion.toVersion('11')
+}

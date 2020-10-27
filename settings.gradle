@@ -1,0 +1,5 @@
+rootProject.name="custom-jwt-token"
+include 'service-x'
+include 'jwt-generator-a'
+include 'jwt-generator-b'
+
