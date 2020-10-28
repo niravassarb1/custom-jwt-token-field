@@ -2,9 +2,11 @@ package example.micronaut
 
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.test.annotation.MicronautTest
+import io.reactivex.Flowable
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -35,11 +37,17 @@ class CheckSecureRequestTest extends Specification {
 
         //Once POC is in place, getEndpoint A should pass and getEndpoint B should get UNAUTHORIZED
         String msgA = appClient.getEndpointA("Bearer ${loginRsp.accessToken}")
-        String msgB = appClient.getEndpointB("Bearer ${loginRsp.accessToken}")
 
         then:
         msgA == 'sherlock'
-        msgB == 'sherlock'
+
+        when:
+        appClient.getEndpointB("Bearer ${loginRsp.accessToken}")
+
+        then:
+        HttpClientResponseException ex = thrown()
+        ex.message == "Unauthorized"
+
     }
 
     def "verify app endpoints are available with auth token from jwt-generator-b"() {

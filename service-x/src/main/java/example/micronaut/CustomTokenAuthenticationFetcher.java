@@ -75,14 +75,15 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
                         return authentication;
                     }).toFlowable();
         } else if (request.getPath().equals("/endpoint-b")){
-            return Flowable.fromIterable(jwtTokenValidatorAList)
-                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
-                    .firstElement()
-                    .map(authentication -> {
-                        request.setAttribute(TOKEN, tokenValue);
-                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-                        return authentication;
-                    }).toFlowable();
+//            return Flowable.fromIterable(jwtTokenValidatorAList)
+//                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+//                    .firstElement()
+//                    .map(authentication -> {
+//                        request.setAttribute(TOKEN, tokenValue);
+//                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+//                        return authentication;
+//                    }).toFlowable();
+            return Flowable.empty();
         } else {
             return Flowable.empty();
         }
