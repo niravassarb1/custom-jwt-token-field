@@ -64,7 +64,17 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
         Collection<TokenValidator> jwtTokenValidatorBList = new ArrayList<TokenValidator>();
         jwtTokenValidatorBList.add(this.jwtTokenValidatorB);
 
-        if ( 1 == 1) {
+        // URI logic goes here
+        if (request.getPath().equals("/endpoint-a")) {
+            return Flowable.fromIterable(jwtTokenValidatorAList)
+                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                    .firstElement()
+                    .map(authentication -> {
+                        request.setAttribute(TOKEN, tokenValue);
+                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                        return authentication;
+                    }).toFlowable();
+        } else if (request.getPath().equals("/endpoint-b")){
             return Flowable.fromIterable(jwtTokenValidatorAList)
                     .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
                     .firstElement()
@@ -74,17 +84,8 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
                         return authentication;
                     }).toFlowable();
         } else {
-            return Flowable.fromIterable(jwtTokenValidatorAList)
-                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
-                    .firstElement()
-                    .map(authentication -> {
-                        request.setAttribute(TOKEN, tokenValue);
-                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-                        return authentication;
-                    }).toFlowable();
+            return Flowable.empty();
         }
-
-
     }
 
     @Override
