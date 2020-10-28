@@ -30,9 +30,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Replaces(JwtTokenValidator.class)
-@Context
-public class CustomJwtTokenValidator implements TokenValidator {
+/******** NOT USED*****************/
+//@Replaces(JwtTokenValidator.class)
+//@Context
+public class CustomJwtTokenValidator /*implements TokenValidator*/ {
     private static final Logger LOG = LoggerFactory.getLogger(CustomJwtTokenValidator.class);
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
@@ -44,7 +45,7 @@ public class CustomJwtTokenValidator implements TokenValidator {
 
     Map<String, List<SignatureConfiguration>> signatureMap;
 
-    @Inject
+    //@Inject
     public CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
                                    Collection<EncryptionConfiguration> encryptionConfigurations,
                                    Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
@@ -112,7 +113,6 @@ public class CustomJwtTokenValidator implements TokenValidator {
         this.jwtAuthenticationFactory = jwtAuthenticationFactory;
     }
 
-    @Override
     public Publisher<Authentication> validateToken(String token) {
 
         //investigate which calls would come via this method without the request context. In this case, not sure
@@ -123,8 +123,7 @@ public class CustomJwtTokenValidator implements TokenValidator {
                 .map(Flowable::just)
                 .orElse(Flowable.empty());
     }
-
-    @Override
+    
     public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
 
         //based on mapping/annotation decide which validator to use between default `validator`

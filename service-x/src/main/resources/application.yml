@@ -9,9 +9,9 @@ micronaut:
       jwt:
         signatures:
           jwks:
-            jwt-generator-a:
+            jwks-generator-a:
               keyType: 'EC'
               url: 'http://localhost:8081/.well-known/jwks.json'
-            jwt-generator-b:
+            jwks-generator-b:
               keyType: 'EC'
               url: 'http://localhost:8082/.well-known/jwks.json'
