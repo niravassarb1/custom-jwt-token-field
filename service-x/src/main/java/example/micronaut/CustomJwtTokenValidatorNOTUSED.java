@@ -5,8 +5,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.KeyType;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import io.micronaut.context.annotation.Context;
-import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
@@ -16,15 +14,12 @@ import io.micronaut.security.token.jwt.signature.ec.ECSignatureConfiguration;
 import io.micronaut.security.token.jwt.signature.jwks.JwksSignature;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
 import io.micronaut.security.token.jwt.validator.JwtAuthenticationFactory;
-import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import io.micronaut.security.token.jwt.validator.JwtValidator;
-import io.micronaut.security.token.validator.TokenValidator;
 import io.reactivex.Flowable;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.security.interfaces.ECPublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,8 +28,8 @@ import java.util.stream.Collectors;
 /******** NOT USED*****************/
 //@Replaces(JwtTokenValidator.class)
 //@Context
-public class CustomJwtTokenValidator /*implements TokenValidator*/ {
-    private static final Logger LOG = LoggerFactory.getLogger(CustomJwtTokenValidator.class);
+public class CustomJwtTokenValidatorNOTUSED /*implements TokenValidator*/ {
+    private static final Logger LOG = LoggerFactory.getLogger(CustomJwtTokenValidatorNOTUSED.class);
 
     protected final JwtAuthenticationFactory jwtAuthenticationFactory;
     protected final JwtValidator defaultValidator;
@@ -46,10 +41,10 @@ public class CustomJwtTokenValidator /*implements TokenValidator*/ {
     Map<String, List<SignatureConfiguration>> signatureMap;
 
     //@Inject
-    public CustomJwtTokenValidator(Collection<SignatureConfiguration> signatureConfigurations,
-                                   Collection<EncryptionConfiguration> encryptionConfigurations,
-                                   Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
-                                   JwtAuthenticationFactory jwtAuthenticationFactory) {
+    public CustomJwtTokenValidatorNOTUSED(Collection<SignatureConfiguration> signatureConfigurations,
+                                          Collection<EncryptionConfiguration> encryptionConfigurations,
+                                          Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
+                                          JwtAuthenticationFactory jwtAuthenticationFactory) {
 
         Map<String, List<SignatureConfiguration>> map = new HashMap<>();
         for (SignatureConfiguration signatureConfiguration : signatureConfigurations) {
@@ -123,7 +118,7 @@ public class CustomJwtTokenValidator /*implements TokenValidator*/ {
                 .map(Flowable::just)
                 .orElse(Flowable.empty());
     }
-    
+
     public Publisher<Authentication> validateToken(String token, @Nullable HttpRequest<?> request) {
 
         //based on mapping/annotation decide which validator to use between default `validator`
