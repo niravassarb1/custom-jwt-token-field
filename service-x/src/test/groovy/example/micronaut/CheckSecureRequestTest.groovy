@@ -6,7 +6,6 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
 import io.micronaut.test.annotation.MicronautTest
-import io.reactivex.Flowable
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -22,53 +21,54 @@ class CheckSecureRequestTest extends Specification {
     @Inject
     JwtGeneratorBClient jwtGeneratorBClient;
 
-
-    def "verify app endpoints are available with auth token from jwt-generator-a"() {
+    def "verify endpoint-a is validated with jwks from jwt-generator-a"() {
         when: 'login and get auth token'
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials("sherlock", "password")
-        BearerAccessRefreshToken loginRsp = jwtGeneratorAClient.login(creds)
+        BearerAccessRefreshToken loginRspFromA = jwtGeneratorAClient.login(creds)
 
         then:
-        loginRsp
-        loginRsp.accessToken
-        JWTParser.parse(loginRsp.accessToken) instanceof SignedJWT
+        loginRspFromA
+        loginRspFromA.accessToken
+        JWTParser.parse(loginRspFromA.accessToken) instanceof SignedJWT
 
-        when: "accessing the endpoints A and B providing auth token"
+        when: "accessing endpoint-a with token from jwt-generator-a"
+        String msgA = appClient.getEndpointA("Bearer ${loginRspFromA.accessToken}")
 
-        //Once POC is in place, getEndpoint A should pass and getEndpoint B should get UNAUTHORIZED
-        String msgA = appClient.getEndpointA("Bearer ${loginRsp.accessToken}")
-
-        then:
+        then: "authorized"
         msgA == 'sherlock'
 
-        when:
-        appClient.getEndpointB("Bearer ${loginRsp.accessToken}")
+        when: "accessing the endpoint-b with token from jwt-generator-a"
+        appClient.getEndpointB("Bearer ${loginRspFromA.accessToken}")
 
-        then:
+        then: "unauthorized"
         HttpClientResponseException ex = thrown()
         ex.message == "Unauthorized"
 
     }
 
-    def "verify app endpoints are available with auth token from jwt-generator-b"() {
+    def "verify endpoint-b is validated with jwks from jwt-generator-b"() {
         when: 'login and get auth token'
         UsernamePasswordCredentials creds = new UsernamePasswordCredentials("sherlock", "password")
-        BearerAccessRefreshToken loginRsp = jwtGeneratorBClient.login(creds)
+        BearerAccessRefreshToken loginRspFromB = jwtGeneratorBClient.login(creds)
 
         then:
-        loginRsp
-        loginRsp.accessToken
-        JWTParser.parse(loginRsp.accessToken) instanceof SignedJWT
+        loginRspFromB
+        loginRspFromB.accessToken
+        JWTParser.parse(loginRspFromB.accessToken) instanceof SignedJWT
 
-        when: "accessing the endpoints A and B providing auth token"
+        when: "accessing endpoint-b with token from jwt-generator-b"
+        String msgA = appClient.getEndpointB("Bearer ${loginRspFromB.accessToken}")
 
-        //Once POC is in place, getEndpoint B should pass and getEndpoint A should get UNAUTHORIZED
-        String msgA = appClient.getEndpointA("Bearer ${loginRsp.accessToken}")
-        String msgB = appClient.getEndpointB("Bearer ${loginRsp.accessToken}")
-
-        then:
+        then: "authorized"
         msgA == 'sherlock'
-        msgB == 'sherlock'
+
+        when: "accessing the endpoint-a with token from jwt-generator-b"
+        appClient.getEndpointA("Bearer ${loginRspFromB.accessToken}")
+
+        then: "unauthorized"
+        HttpClientResponseException ex = thrown()
+        ex.message == "Unauthorized"
+
     }
 
 }

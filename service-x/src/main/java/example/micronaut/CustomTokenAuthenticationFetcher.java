@@ -15,8 +15,6 @@ import org.reactivestreams.Publisher;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -58,32 +56,11 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
 
         String tokenValue = token.get();
 
-        Collection<TokenValidator> jwtTokenValidatorAList = new ArrayList<TokenValidator>();
-        jwtTokenValidatorAList.add(this.jwtTokenValidatorA);
-
-        Collection<TokenValidator> jwtTokenValidatorBList = new ArrayList<TokenValidator>();
-        jwtTokenValidatorBList.add(this.jwtTokenValidatorB);
-
         // URI logic goes here
         if (request.getPath().equals("/endpoint-a")) {
-            return Flowable.fromIterable(jwtTokenValidatorAList)
-                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
-                    .firstElement()
-                    .map(authentication -> {
-                        request.setAttribute(TOKEN, tokenValue);
-                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-                        return authentication;
-                    }).toFlowable();
+            return validateTokenAndReturnAuthentication(tokenValue, request, jwtTokenValidatorA);
         } else if (request.getPath().equals("/endpoint-b")){
-//            return Flowable.fromIterable(jwtTokenValidatorAList)
-//                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
-//                    .firstElement()
-//                    .map(authentication -> {
-//                        request.setAttribute(TOKEN, tokenValue);
-//                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
-//                        return authentication;
-//                    }).toFlowable();
-            return Flowable.empty();
+            return validateTokenAndReturnAuthentication(tokenValue, request, jwtTokenValidatorB);
         } else {
             return Flowable.empty();
         }
@@ -92,5 +69,16 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
     @Override
     public int getOrder() {
         return ORDER;
+    }
+
+    private Publisher<Authentication> validateTokenAndReturnAuthentication(String tokenValue, HttpRequest<?> request, TokenValidator customTokenValidator) {
+        return Flowable.just(customTokenValidator)
+                    .flatMap(tokenValidator -> tokenValidator.validateToken(tokenValue, request))
+                    .firstElement()
+                    .map(authentication -> {
+                        request.setAttribute(TOKEN, tokenValue);
+                        eventPublisher.publishEvent(new TokenValidatedEvent(tokenValue));
+                        return authentication;
+                    }).toFlowable();
     }
 }
