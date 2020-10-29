@@ -16,12 +16,12 @@ public class HomeController {
     @Produces(MediaType.TEXT_PLAIN)
     @Get(value = "/endpoint-a")
     public String getEndpointA(Principal principal) {
-        return principal.getName();
+        return principal.getName()+"FromA";
     }
 
     @Produces(MediaType.TEXT_PLAIN)
     @Get(value = "/endpoint-b")
     public String getEndpointB(Principal principal) {
-        return principal.getName();
+        return principal.getName()+"FromB";
     }
 }
