@@ -2,6 +2,7 @@ package example.micronaut
 
 import com.nimbusds.jwt.JWTParser
 import com.nimbusds.jwt.SignedJWT
+import io.micronaut.context.annotation.Property
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UsernamePasswordCredentials
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
@@ -10,8 +11,9 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
+@Property(name = "b1x.security.jwt-token-per-endpoint.enabled", value = "true")
 @MicronautTest
-class CheckSecureRequestTest extends Specification {
+class JwtTokenPerEndpointTest extends Specification {
 
     @Inject
     AppClient appClient

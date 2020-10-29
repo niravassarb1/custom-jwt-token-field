@@ -1,6 +1,7 @@
 package example.micronaut;
 
 import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.Authentication;
@@ -19,9 +20,12 @@ import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
 
+@Requires(property = CustomTokenAuthenticationFetcher.PREFIX + ".enabled", value = "true")
 @Replaces(TokenAuthenticationFetcher.class)
 @Singleton
 public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
+
+    public static final String PREFIX = "b1x.security.jwt-token-per-endpoint";
 
     /**
      * The order of the fetcher.

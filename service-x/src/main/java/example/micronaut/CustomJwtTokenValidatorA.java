@@ -1,6 +1,7 @@
 package example.micronaut;
 
 import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.security.token.jwt.encryption.EncryptionConfiguration;
 import io.micronaut.security.token.jwt.signature.SignatureConfiguration;
 import io.micronaut.security.token.jwt.validator.GenericJwtClaimsValidator;
@@ -13,6 +14,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Collection;
 
+@Requires(property = CustomTokenAuthenticationFetcher.PREFIX + ".enabled", value = "true")
 @Replaces(JwtTokenValidator.class)
 @Named("jwt-token-validator-a")
 @Singleton
