@@ -9,6 +9,7 @@ import io.micronaut.security.rules.SecurityRule;
 
 import java.security.Principal;
 
+@JwtTokenPerEndpoint("nirav")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller
 public class HomeController {
