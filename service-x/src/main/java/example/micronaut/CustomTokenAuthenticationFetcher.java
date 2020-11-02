@@ -41,8 +41,8 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
     private final JwtTokenPerEndpointAnnotationRule jwtTokenPerEndpointAnnotationRule;
 
     @Inject
-    public CustomTokenAuthenticationFetcher(@Named("jwt-token-validator-a") TokenValidator jwtTokenValidatorA,
-                                            @Named("jwt-token-validator-b") TokenValidator jwtTokenValidatorB,
+    public CustomTokenAuthenticationFetcher(@Named(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_A) TokenValidator jwtTokenValidatorA,
+                                            @Named(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_B) TokenValidator jwtTokenValidatorB,
                                             TokenResolver tokenResolver,
                                             ApplicationEventPublisher eventPublisher,
                                             JwtTokenPerEndpointAnnotationRule jwtTokenPerEndpointAnnotationRule) {

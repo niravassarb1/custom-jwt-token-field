@@ -16,12 +16,12 @@ import java.util.Collection;
 
 @Requires(property = CustomTokenAuthenticationFetcher.PREFIX + ".enabled", value = "true")
 @Replaces(JwtTokenValidator.class)
-@Named("jwt-token-validator-a")
+@Named(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_A)
 @Singleton
 public class CustomJwtTokenValidatorA extends AbstractCustomTokenValidator {
 
     @Inject
-    public CustomJwtTokenValidatorA(@Named("jwks-generator-a") SignatureConfiguration jwksSignatureConfiguration,
+    public CustomJwtTokenValidatorA(@Named(CustomJwtTokenValidatorConstants.JWKS_GENERATOR_A) SignatureConfiguration jwksSignatureConfiguration,
                              Collection<EncryptionConfiguration> encryptionConfigurations,
                              Collection<GenericJwtClaimsValidator> genericJwtClaimsValidators,
                              JwtAuthenticationFactory jwtAuthenticationFactory) {
