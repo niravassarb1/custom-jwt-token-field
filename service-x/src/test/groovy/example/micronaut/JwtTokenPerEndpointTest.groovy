@@ -39,12 +39,12 @@ class JwtTokenPerEndpointTest extends Specification {
         then: "authorized"
         msgA == 'sherlockFromA'
 
-//        when: "accessing the endpoint-b with token from jwt-generator-a"
-//        appClient.getEndpointB("Bearer ${loginRspFromA.accessToken}")
-//
-//        then: "unauthorized"
-//        HttpClientResponseException ex = thrown()
-//        ex.message == "Unauthorized"
+        when: "accessing the endpoint-b with token from jwt-generator-a"
+        appClient.getEndpointB("Bearer ${loginRspFromA.accessToken}")
+
+        then: "unauthorized"
+        HttpClientResponseException ex = thrown()
+        ex.message == "Unauthorized"
 
     }
 

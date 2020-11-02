@@ -18,7 +18,6 @@ import org.reactivestreams.Publisher;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 import static io.micronaut.security.filters.SecurityFilter.TOKEN;
@@ -66,12 +65,11 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
 
         String tokenValue = token.get();
 
-        // URI logic goes here
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
         String jwtTokenPerEndpointAnnotationValue = jwtTokenPerEndpointAnnotationRule.getJwksSignatureNames((routeMatch));
-        if (request.getPath().equals("/endpoint-a")) {
+        if (jwtTokenPerEndpointAnnotationValue.equalsIgnoreCase(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_A)) {
             return validateTokenAndReturnAuthentication(tokenValue, request, jwtTokenValidatorA);
-        } else if (request.getPath().equals("/endpoint-b")){
+        } else if (jwtTokenPerEndpointAnnotationValue.equalsIgnoreCase(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_B)){
             return validateTokenAndReturnAuthentication(tokenValue, request, jwtTokenValidatorB);
         } else {
             return Flowable.empty();
