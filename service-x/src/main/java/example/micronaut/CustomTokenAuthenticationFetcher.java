@@ -66,7 +66,7 @@ public class CustomTokenAuthenticationFetcher implements AuthenticationFetcher {
         String tokenValue = token.get();
 
         RouteMatch<?> routeMatch = request.getAttribute(HttpAttributes.ROUTE_MATCH, RouteMatch.class).orElse(null);
-        String jwtTokenPerEndpointAnnotationValue = jwtTokenPerEndpointAnnotationRule.getJwksSignatureNames((routeMatch));
+        String jwtTokenPerEndpointAnnotationValue = jwtTokenPerEndpointAnnotationRule.getJwksSignatureName((routeMatch));
         if (jwtTokenPerEndpointAnnotationValue.equalsIgnoreCase(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_A)) {
             return validateTokenAndReturnAuthentication(tokenValue, request, jwtTokenValidatorA);
         } else if (jwtTokenPerEndpointAnnotationValue.equalsIgnoreCase(CustomJwtTokenValidatorConstants.JWT_TOKEN_VALIDATOR_B)){

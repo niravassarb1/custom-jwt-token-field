@@ -9,7 +9,7 @@ import java.util.Optional;
 @Singleton
 public class JwtTokenPerEndpointAnnotationRule {
 
-    public String getJwksSignatureNames(RouteMatch<?> routeMatch) {
+    public String getJwksSignatureName(RouteMatch<?> routeMatch) {
         if (routeMatch instanceof MethodBasedRouteMatch) {
             MethodBasedRouteMatch methodRoute = ((MethodBasedRouteMatch) routeMatch);
             if (methodRoute.hasAnnotation(JwtTokenPerEndpoint.class)) {
