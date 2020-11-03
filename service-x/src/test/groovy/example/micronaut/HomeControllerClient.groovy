@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 
 @Client("/")
-interface AppClient {
+interface HomeControllerClient {
 
     @Consumes(MediaType.TEXT_PLAIN)
     @Get("/endpoint-a")

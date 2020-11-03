@@ -15,7 +15,7 @@ import javax.inject.Inject
 class JwtTokenPerEndpointDisabledTest extends Specification {
 
     @Inject
-    AppClient appClient
+    HomeControllerClient appClient
 
     @Inject
     JwtGeneratorAClient jwtGeneratorAClient;
